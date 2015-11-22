@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container">
+  <h2>Search for whatever your heart desires:</h2>
+  <form role="form" method="POST">
+    <div class="form-group">
+      <input type="text" class="form-control" name="query" placeholder="Ask me anything">
+    </div>
+    <button type="submit" class="btn btn-default">Search</button>
+  </form>
+</div>
+
+{% endblock %}
