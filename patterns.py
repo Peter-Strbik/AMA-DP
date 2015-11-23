@@ -188,91 +188,91 @@ name_patterns = [name_pattern1, name_pattern2, name_pattern3]
 # 29/Feb/2000
 # 1.1.9999
 date_pattern1 = compile(ur"""
-    (?:                                    # start of "\b replacement"
-        ^                                  # start of string
-        |                                  # or
-        (?<=                               # start of positive lookbehind
-            [\s!-/:-@\[-`{-~]|             # ASCII whitespace or punctuation
-            [\u2000-\u206F\u2E00-\u2E7F]   # Unicode whitespace or punctuation
-            )                              # end of positive lookbehind
-        )                                  # end of "\b replacement"
-    (                                      # start of "Date"
-                                           # start of "Day under 29"
-        (?:0?[1-9]|1\d|2[0-8])(/|-|\.)     # number in 1-28, then a separator
-        (?:                                # start of "Month after Day under 29"
-            0?[1-9]                        # number in 1-9
-            |                              # or
-            1[0-2]                         # number in 10-12
-            |                              # or
-            Jan|Feb|Mar|Apr|May|Jun|       # 3-letter appreviation of the name
-            Jul|Aug|Sep|Oct|Nov|Dec        # of any month
-            )                              # end of "Month after Day under 29"
-        \1                                 # repeat previous separator
-        (?:[1-9]\d)?                       # optional first two digits of year
-        \d\d                               # last two digits of year
-                                           # end of "Day under 29"
-        |                                  # or
-                                           # start of "Day 29, 30, or 31"
-        (?:                                # start of "Day and Month"
-            (?:                            # start of "Day 29 or 30"
-                (?:29|30)(/|-|\.)          # 29 or 30 followed by a separator
-                (?:                        # start of "Month after Day 29 or 30"
-                    0?[13-9]               # number in 1-9 except 2 (February)
-                    |                      # or
-                    1[0-2]                 # number in 10-12
-                    |                      # or
-                    Jan|Mar|Apr|May|Jun|   # 3-letter appreviation of the name
+    (?:                                     # start of "\b replacement"
+        ^                                   # start of string
+        |                                   # or
+        (?<=                                # start of positive lookbehind
+            [\s!-/:-@\[-`{-~]|              # ASCII whitespace or punctuation
+            [\u2000-\u206F\u2E00-\u2E7F]    # Unicode whitespace or punctuation
+            )                               # end of positive lookbehind
+        )                                   # end of "\b replacement"
+    (                                       # start of "Date"
+                                            # start of "Day under 29"
+        (?:0?[1-9]|1\d|2[0-8])(/|-|\.)      # number in 1-28, then a separator
+        (?:                                 # start of "Month after Day under 29"
+            0?[1-9]                         # number in 1-9
+            |                               # or
+            1[0-2]                          # number in 10-12
+            |                               # or
+            Jan|Feb|Mar|Apr|May|Jun|        # 3-letter appreviation of the name
+            Jul|Aug|Sep|Oct|Nov|Dec         # of any month
+            )                               # end of "Month after Day under 29"
+        \1                                  # repeat previous separator
+        (?:[1-9]\d)?                        # optional first two digits of year
+        \d\d                                # last two digits of year
+                                            # end of "Day under 29"
+        |                                   # or
+                                            # start of "Day 29, 30, or 31"
+        (?:                                 # start of "Day and Month"
+            (?:                             # start of "Day 29 or 30"
+                (?:29|30)(/|-|\.)           # 29 or 30 followed by a separator
+                (?:                         # start of "Month after Day 29 or 30"
+                    0?[13-9]                # number in 1-9 except 2 (February)
+                    |                       # or
+                    1[0-2]                  # number in 10-12
+                    |                       # or
+                    Jan|Mar|Apr|May|Jun|    # 3-letter appreviation of the name
                     Jul|Aug|Sep|Oct|Nov|Dec # of any month other than February
-                    )                      # end of "Month after Day 29 or 30"
-                \2                         # repeat previous separator
-                )                          # end of "Day 29 or 30"
-            |                              # or
-            (?:                            # start of "Day 31"
-                31(/|-|\.)                 # 31 followed by a separator
-                (?:                        # start of "Month after Day 31"
-                    0?[13578]              # 1-digit month with 31 days
-                    |                      # or
-                    1[02]                  # 2-digit month with 31 days
-                    |                      # or
-                    Jan|Mar|May|Jul|Aug|   # 3-letter appreviation of the name
-                    Oct|Dec                # of any month with 31 days
-                    )                      # end of "Month after Day 31"
-                )                          # end of "Day 31"
-            \3                             # repeat previous separator
-            )                              # end of "Day and Month"
-        (?:[1-9]\d)?                       # optional first two digits of year
-        \d\d                               # last two digits of year
-                                           # end of "Day 29, 30, or 31"
-        |                                  # or
-        (?:                                # start of "February 29th"
-            29(/|-|\.)                     # 29 followed by a separator
-            (?:0?2|Feb)                    # 2 (February)
-            \4                             # repeat previous separator
-            (?:                            # start of "Year after February 29th"
-                                         # start of "Leap Year not ending in 00"
-                (?:[1-9]\d)?               # optional first two digits of year
-                (?:                        # start of "2-digit number div. by 4"
-                    0[48]                  # 04 or 08
-                    |                      # or
-                    [2468][048]            # 20, 24, 28, 40, 44, 48, ...
-                    |                      # or
-                    [13579][26]            # 12, 16, 32, 36, 52, 56, ...
-                    )                      # end of "2-digit number div. by 4"
-                                           # end of "Leap Year not ending in 00"
-                |                          # or
-                                           # start of "Leap Year ending in 00"
+                    )                       # end of "Month after Day 29 or 30"
+                \2                          # repeat previous separator
+                )                           # end of "Day 29 or 30"
+            |                               # or
+            (?:                             # start of "Day 31"
+                31(/|-|\.)                  # 31 followed by a separator
+                (?:                         # start of "Month after Day 31"
+                    0?[13578]               # 1-digit month with 31 days
+                    |                       # or
+                    1[02]                   # 2-digit month with 31 days
+                    |                       # or
+                    Jan|Mar|May|Jul|Aug|    # 3-letter appreviation of the name
+                    Oct|Dec                 # of any month with 31 days
+                    )                       # end of "Month after Day 31"
+                )                           # end of "Day 31"
+            \3                              # repeat previous separator
+            )                               # end of "Day and Month"
+        (?:[1-9]\d)?                        # optional first two digits of year
+        \d\d                                # last two digits of year
+                                            # end of "Day 29, 30, or 31"
+        |                                   # or
+        (?:                                 # start of "February 29th"
+            29(/|-|\.)                      # 29 followed by a separator
+            (?:0?2|Feb)                     # 2 (February)
+            \4                              # repeat previous separator
+            (?:                             # start of "Year after February 29th"
+                                            # start of "Leap Year not ending in 00"
+                (?:[1-9]\d)?                # optional first two digits of year
+                (?:                         # start of "2-digit number div. by 4"
+                    0[48]                   # 04 or 08
+                    |                       # or
+                    [2468][048]             # 20, 24, 28, 40, 44, 48, ...
+                    |                       # or
+                    [13579][26]             # 12, 16, 32, 36, 52, 56, ...
+                    )                       # end of "2-digit number div. by 4"
+                                            # end of "Leap Year not ending in 00"
+                |                           # or
+                                            # start of "Leap Year ending in 00"
                 (?:[13579][26]|[2468][048]) # 12, 16, 20, 24, 28, 32, ...
-                00                         # last two digits of year
-                                           # end of "Leap Year ending in 00"
-                )                          # end of "Year after February 29th"
-            )                              # end of "February 29th"
-        )                                  # end of "Date"
-    (?:                                    # start of "\b replacement"
-        &                                  # end of string
-        |                                  # or
-        (?=                                # start of positive lookahead
-            [\s!-/:-@\[-`{-~]|             # ASCII whitespace or punctuation
-            [\u2000-\u206F\u2E00-\u2E7F]   # Unicode whitespace or punctuation
-            )                              # end of positive lookahead
-        )                                  # end of "\b replacement"
+                00                          # last two digits of year
+                                            # end of "Leap Year ending in 00"
+                )                           # end of "Year after February 29th"
+            )                               # end of "February 29th"
+        )                                   # end of "Date"
+    (?:                                     # start of "\b replacement"
+        &                                   # end of string
+        |                                   # or
+        (?=                                 # start of positive lookahead
+            [\s!-/:-@\[-`{-~]|              # ASCII whitespace or punctuation
+            [\u2000-\u206F\u2E00-\u2E7F]    # Unicode whitespace or punctuation
+            )                               # end of positive lookahead
+        )                                   # end of "\b replacement"
     """, VERBOSE|UNICODE)
