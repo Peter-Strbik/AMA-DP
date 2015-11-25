@@ -279,7 +279,7 @@ date_pattern1 = compile(ur"""
 # 11-22-15
 # Feb/29/2000
 # 1.1.9999
-date_pattern1 = compile(ur"""
+date_pattern2 = compile(ur"""
     (?:                                  # start of "Date Boundary"
         ^                                # start of string
         |                                # or
