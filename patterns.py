@@ -274,3 +274,5 @@ date_pattern1 = compile(ur"""
             )                            # end of positive lookahead
         )                                # end of "Date Boundary"
     """, VERBOSE|UNICODE)
+
+date_patterns = [date_pattern1]
