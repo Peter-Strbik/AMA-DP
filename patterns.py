@@ -368,3 +368,6 @@ date_pattern2 = compile(ur"""
     """, VERBOSE|UNICODE)
 
 date_patterns = [date_pattern1]
+
+html_pattern = compile(r'<.*?>')
+space_pattern = compile(r'[ \t\n]+')
