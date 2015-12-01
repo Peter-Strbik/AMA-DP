@@ -30,12 +30,10 @@ from re import compile, VERBOSE, UNICODE, DOTALL
 #
 #    \b                     # word boundary
 #    (?:                    # start of "first name element" (not captured)
-#        (?:                # start of "initial element" (not captured)
+#        (?:                # start of "element base" (not captured)
 #            [A-Z]\.        # initial followed by a period
-#            )              # end of "initial element"
-#        |                  # or
-#        (?:                # start of "full element" (not captured)
-#            (?:            # start of "full element prefix" (not captured)
+#            |              # or
+#            (?:            # start of "prefix" (not captured)
 #                [A-Z]      # just a capital letter, for ordinary names
 #                |          # or
 #                [A-Z]      # a 2-3 letter preposition (a capital letter
@@ -44,18 +42,16 @@ from re import compile, VERBOSE, UNICODE, DOTALL
 #                |          # or
 #                [A-Z][ ']  # a capital letter followed by a separator and an
 #                [A-Z]?     # optional capital letter, for names like O'brien
-#                )          # end of "full element prefix"
+#                )          # end of "prefix"
 #            [a-z]{1,34}    # up to 34 lowercase letters
-#            )              # end of "full element"
+#            )              # end of "element base"
 #        [ -]               # a space or a hyphen
 #        )                  # end of "first name element"
 #    (?:                    # start of "central name element" (not captured)
-#        (?:                # start of "initial element" (same as first elem.)
+#        (?:                # start of "element base" (similar to first elem.)
 #            [A-Z]\.        #
-#            )              # end of "initial element"
-#        |                  # or
-#        (?:                # start of "full element" (similar to first elem.)
-#            (?:            # start of "full element prefix"
+#            |              #
+#            (?:            #
 #                [A-Z]      #
 #                |          #
 #                [A-Z]      #
@@ -67,18 +63,16 @@ from re import compile, VERBOSE, UNICODE, DOTALL
 #                |          # or (in addition to "prefixes" in first elem.)
 #                [a-z]{1,3} # a lowercase preposition, then a separator
 #                [ '][A-Z]  # and a capital letter, for names like du Bourg
-#                )          # end of "full element prefix"
+#                )          #
 #            [a-z]{1,34}    #
-#            )              # end of "full element"
+#            )              # end of "element base"
 #        [ -]               #
 #        )                  # end of "central name element"
 #    {,8}                   # up to 8 "central name elements" are allowed
 #    (?:                    # start of "final name element" (2-10 in total)
-#        (?:                # start of "initial element" (same as first elem.)
+#        (?:                # start of "element base" (same as central elem.)
 #            [A-Z]\.        #
-#            )              # end of "initial element"
-#        |                  # or
-#        (?:                # start of "full element" (same as central elem.)
+#            |              # or
 #            (?:            #
 #                [A-Z]      #
 #                |          #
@@ -93,7 +87,7 @@ from re import compile, VERBOSE, UNICODE, DOTALL
 #                [ '][A-Z]  #
 #                )          #
 #            [a-z]{1,34}    #
-#            )              # end of "full element" (no space or hyphen now)
+#            )              # end of "element base" (no space or hyphen now)
 #        )                  # end of "final name element"
 #    \b                     # word boundary
 
@@ -105,11 +99,12 @@ from re import compile, VERBOSE, UNICODE, DOTALL
 # - José Eduardo Santos Tavares-Silva
 # - Dies Ist Äußerst Köstliche Apfelwein
 
-name_pattern1 = compile(ur"""
+name_pattern = compile(ur"""
     \b
     (?:
-        (?:[A-Z\u00C0-\u00D6\u00D8-\u00DE]\.)|
         (?:
+            [A-Z\u00C0-\u00D6\u00D8-\u00DE]\.
+            |
             (?:
                 [A-Z\u00C0-\u00D6\u00D8-\u00DE]|
                 [A-Z\u00C0-\u00D6\u00D8-\u00DE]
@@ -122,8 +117,9 @@ name_pattern1 = compile(ur"""
             )[ -]
         )
     (?:
-        (?:[A-Z\u00C0-\u00D6\u00D8-\u00DE]\.)|
         (?:
+            [A-Z\u00C0-\u00D6\u00D8-\u00DE]\.
+            |
             (?:
                 [A-Z\u00C0-\u00D6\u00D8-\u00DE]|
                 [A-Z\u00C0-\u00D6\u00D8-\u00DE]
@@ -138,8 +134,9 @@ name_pattern1 = compile(ur"""
             )[ -]
         ){,8}
     (?:
-        (?:[A-Z\u00C0-\u00D6\u00D8-\u00DE]\.)|
         (?:
+            [A-Z\u00C0-\u00D6\u00D8-\u00DE]\.
+            |
             (?:
                 [A-Z\u00C0-\u00D6\u00D8-\u00DE]|
                 [A-Z\u00C0-\u00D6\u00D8-\u00DE]
@@ -155,31 +152,6 @@ name_pattern1 = compile(ur"""
         )
     \b
     """, VERBOSE|UNICODE)
-
-# Foreign Name Regex
-# Works for many foreign names with ASCII letters or letters in the
-# Latin-1 Supplement Unicode block, the Latin Extended-A block, the Latin
-# Extended-B block, the IPA Extensions block, the Spacing Modifier Letters
-# block, or the Latin Extended Additional block, and possibly commas,
-# periods, apostrophes, or hyphens:
-# - ʻĂḇēḏ-nəḡô
-# - Nguyễn Tấn Dũng
-# - ʞunɹp ɹǝʌǝ ǝʌɐɥ ı ɹǝpıɔ ǝןddɐ ʇsǝq ǝɥʇ ʎןǝʇnןosqɐ sı sıɥʇ poɓ ʎɯ ɥo
-
-name_pattern2 = compile(ur"""
-    \b
-    [A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF\u1E00-\u1EFF ,.'-]+
-    \b
-    """, VERBOSE|UNICODE)
-
-# "Just Give Up" Regex
-# Works for all other junk:
-# - 王宜成
-# - .-../--/.-/---//..../.-/..../.-////
-# - 49 20 6c 69 6b 65 20 41 70 70 6c 65 20 43 69 64 65 72
-name_pattern3 = compile('.*', DOTALL)
-
-name_patterns = [name_pattern1, name_pattern2, name_pattern3]
 
 # Modified version of regex posted by Alok Chaudhary at
 # http://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy
@@ -367,7 +339,7 @@ date_pattern2 = compile(ur"""
         )                                # end of "Date Boundary"
     """, VERBOSE|UNICODE)
 
-date_patterns = [date_pattern1]
+date_patterns = [date_pattern1, date_pattern2]
 
 html_pattern = compile(r'<.*?>')
 space_pattern = compile(r'[ \t\n]+')
